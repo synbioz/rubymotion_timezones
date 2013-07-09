@@ -2,12 +2,21 @@ class RootViewController < UIViewController
   def viewDidLoad
     view.backgroundColor = UIColor.scrollViewTexturedBackgroundColor
 
+    @text_field = name_text_field
+
     view.addSubview name_label
-    view.addSubview name_text_field
+    view.addSubview @text_field
+
+    single_tap = UITapGestureRecognizer.alloc.initWithTarget(self, action: :'handle_single_tap')
+    view.addGestureRecognizer(single_tap)
   end
 
   def textFieldShouldReturn(text_field)
     text_field.resignFirstResponder
+  end
+
+  def handle_single_tap
+    @text_field.resignFirstResponder
   end
 
   private
