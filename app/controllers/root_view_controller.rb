@@ -2,8 +2,15 @@ class RootViewController < UIViewController
   def viewDidLoad
     view.backgroundColor = UIColor.scrollViewTexturedBackgroundColor
 
+    @text_field = name_text_field
+    @text_field.delegate = self
+
     view.addSubview name_label
-    view.addSubview name_text_field
+    view.addSubview @text_field
+  end
+
+  def textFieldShouldReturn(textField)
+    @text_field.resignFirstResponder
   end
 
   private
@@ -13,6 +20,7 @@ class RootViewController < UIViewController
     label.backgroundColor = UIColor.clearColor
     label.textColor = UIColor.whiteColor
     label.text = "Votre nom"
+
     label
   end
 
