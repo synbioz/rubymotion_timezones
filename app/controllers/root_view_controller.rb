@@ -2,15 +2,12 @@ class RootViewController < UIViewController
   def viewDidLoad
     view.backgroundColor = UIColor.scrollViewTexturedBackgroundColor
 
-    @text_field = name_text_field
-    @text_field.delegate = self
-
     view.addSubview name_label
-    view.addSubview @text_field
+    view.addSubview name_text_field
   end
 
-  def textFieldShouldReturn(textField)
-    @text_field.resignFirstResponder
+  def textFieldShouldReturn(text_field)
+    text_field.resignFirstResponder
   end
 
   private
@@ -28,6 +25,7 @@ class RootViewController < UIViewController
     textField = UITextField.alloc.initWithFrame [[110, 10], [170, 30]]
     textField.borderStyle = UITextBorderStyleRoundedRect
     textField.font = UIFont.systemFontOfSize(15)
+    textField.delegate = self
 
     textField
   end
