@@ -6,15 +6,18 @@ class RootViewController < UIViewController
     @remote_time_label = remote_time_label
 
     @timezones = NSTimeZone.knownTimeZoneNames
+    @date_picker = date_picker
 
     view.addSubview name_label
     view.addSubview @text_field
     view.addSubview @remote_time_label
     view.addSubview timezone_picker
-    view.addSubview date_picker
+    view.addSubview @date_picker
 
     single_tap = UITapGestureRecognizer.alloc.initWithTarget(self, action: :'handle_single_tap')
     view.addGestureRecognizer(single_tap)
+
+    @date_picker.addTarget(self, action: :'handle_date_change', forControlEvents:UIControlEventValueChanged)
   end
 
   def textFieldShouldReturn(text_field)
@@ -24,6 +27,19 @@ class RootViewController < UIViewController
 
   def handle_single_tap
     @text_field.resignFirstResponder
+  end
+
+  def handle_date_change
+    fr_FR = NSLocale.alloc.initWithLocaleIdentifier "fr_FR"
+
+    format = NSDateFormatter.alloc.init
+    format.locale = fr_FR
+    format.setDateFormat("dd MMM yyyy - HH:mm")
+
+    # Conversion de la date en chaine
+    dateString = format.stringFromDate(@date_picker.date)
+
+    @remote_time_label.text = dateString
   end
 
   def numberOfComponentsInPickerView(pickerView)
