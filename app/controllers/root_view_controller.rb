@@ -11,6 +11,7 @@ class RootViewController < UIViewController
     view.addSubview @text_field
     view.addSubview @remote_time_label
     view.addSubview timezone_picker
+    view.addSubview date_picker
 
     single_tap = UITapGestureRecognizer.alloc.initWithTarget(self, action: :'handle_single_tap')
     view.addGestureRecognizer(single_tap)
@@ -63,7 +64,7 @@ class RootViewController < UIViewController
   end
 
   def remote_time_label
-    label = UILabel.alloc.initWithFrame [[0, 400], [view.frame.size.width, 30]]
+    label = UILabel.alloc.initWithFrame [[0, 430], [view.frame.size.width, 30]]
     label.backgroundColor = UIColor.clearColor
     label.textColor = UIColor.whiteColor
     label.textAlignment = NSTextAlignmentCenter
@@ -72,11 +73,17 @@ class RootViewController < UIViewController
   end
 
   def timezone_picker
-    picker = UIPickerView.alloc.init
+    picker = UIPickerView.alloc.initWithFrame [[0, 50], [320, 120]]
     picker.showsSelectionIndicator = true
-    picker.center = self.view.center
     picker.dataSource = self
     picker.delegate = self
+
+    picker
+  end
+
+  def date_picker
+    picker = UIDatePicker.alloc.init
+    picker.center = [view.frame.size.width / 2, 320]
 
     picker
   end
