@@ -5,9 +5,12 @@ class RootViewController < UIViewController
     @text_field = name_text_field
     @remote_time_label = remote_time_label
 
+    @timezones = NSTimeZone.knownTimeZoneNames
+
     view.addSubview name_label
     view.addSubview @text_field
     view.addSubview @remote_time_label
+    view.addSubview timezone_picker
 
     single_tap = UITapGestureRecognizer.alloc.initWithTarget(self, action: :'handle_single_tap')
     view.addGestureRecognizer(single_tap)
@@ -21,6 +24,23 @@ class RootViewController < UIViewController
   def handle_single_tap
     @text_field.resignFirstResponder
   end
+
+  def numberOfComponentsInPickerView(pickerView)
+    1
+  end
+
+  def pickerView(pickerView, numberOfRowsInComponent:component)
+    @timezones.size
+  end
+
+  def pickerView(pickerView, titleForRow:row, forComponent:component)
+    @timezones[row]
+  end
+
+  def pickerView(pickerView, didSelectRow:row, inComponent:component)
+    @remote_time_label.text = "#{@text_field.text}, vous avez choisi #{@timezones[row]}"
+  end
+
 
   private
 
@@ -43,11 +63,21 @@ class RootViewController < UIViewController
   end
 
   def remote_time_label
-    label = UILabel.alloc.initWithFrame [[0, 350], [view.frame.size.width, 30]]
+    label = UILabel.alloc.initWithFrame [[0, 400], [view.frame.size.width, 30]]
     label.backgroundColor = UIColor.clearColor
     label.textColor = UIColor.whiteColor
     label.textAlignment = NSTextAlignmentCenter
 
     label
+  end
+
+  def timezone_picker
+    picker = UIPickerView.alloc.init
+    picker.showsSelectionIndicator = true
+    picker.center = self.view.center
+    picker.dataSource = self
+    picker.delegate = self
+
+    picker
   end
 end
