@@ -7,11 +7,12 @@ class RootViewController < UIViewController
 
     @timezones = NSTimeZone.knownTimeZoneNames
     @date_picker = date_picker
+    @timezone_picker = timezone_picker
 
     view.addSubview name_label
     view.addSubview @text_field
     view.addSubview @remote_time_label
-    view.addSubview timezone_picker
+    view.addSubview @timezone_picker
     view.addSubview @date_picker
 
     single_tap = UITapGestureRecognizer.alloc.initWithTarget(self, action: :'handle_single_tap')
@@ -30,13 +31,16 @@ class RootViewController < UIViewController
   end
 
   def handle_date_change
+    selected_row = @timezone_picker.selectedRowInComponent(0)
+    selected_tz = @timezones[selected_row]
+
     fr_FR = NSLocale.alloc.initWithLocaleIdentifier "fr_FR"
 
     format = NSDateFormatter.alloc.init
     format.locale = fr_FR
+    format.timeZone = NSTimeZone.timeZoneWithName(selected_tz)
     format.setDateFormat("dd MMM yyyy - HH:mm")
 
-    # Conversion de la date en chaine
     dateString = format.stringFromDate(@date_picker.date)
 
     @remote_time_label.text = dateString
@@ -55,7 +59,7 @@ class RootViewController < UIViewController
   end
 
   def pickerView(pickerView, didSelectRow:row, inComponent:component)
-    @remote_time_label.text = "#{@text_field.text}, vous avez choisi #{@timezones[row]}"
+    handle_date_change
   end
 
 
